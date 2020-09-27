@@ -19,12 +19,12 @@ package org.example.service;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
- * Integration tests for {@link RatesAPIExchangeRateProvider}.
+ * Integration tests for {@link FrankfurterExchangeRateProvider}.
  */
-public class RatesAPIExchangeRateProviderTests extends ExchangeRateProviderTests
+public class FrankfurterExchangeRateProviderTests extends ExchangeRateProviderTests
 {
   @Autowired
-  private RatesAPIExchangeRateProvider provider;
+  private FrankfurterExchangeRateProvider provider;
 
   /**
    * {@inheritDoc}

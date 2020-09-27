@@ -30,22 +30,22 @@ import java.util.Map;
 /**
  * <p>
  * Loads currency exchange rates from
- * <a href="https://ratesapi.io">Rates API</a>, a free service for exchange
- * rates.
+ * <a href="https://api.frankfurter.app">Frankfurter</a>, a free service for
+ * exchange rates.
  * </p>
  *
  * <p>
- * Rates API is built on top of data published by the
+ * Frankfurter is built on top of data published by the
  * <a href="https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html">European Central Bank</a>
  * (ECB). Therefore, it supports only a limited number of currencies, namely
  * those for which ECB has direct conversion rates.
  * </p>
  */
 @Component
-public class RatesAPIExchangeRateProvider implements ExchangeRateProvider
+public class FrankfurterExchangeRateProvider implements ExchangeRateProvider
 {
-  private static final String    URL_BASE   = "https://api.ratesapi.io";
-  private static final String    URL_PATH   = "/api/latest?base=%s&symbols=%s";
+  private static final String    URL_BASE   = "https://api.frankfurter.app";
+  private static final String    URL_PATH   = "/latest?from=%s&to=%s";
   private static final WebClient WEB_CLIENT = WebClient.create(URL_BASE);
 
   /**
@@ -60,7 +60,7 @@ public class RatesAPIExchangeRateProvider implements ExchangeRateProvider
                      .uri(String.format(URL_PATH, source.getCurrencyCode(), target.getCurrencyCode()))
                      .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
                      .retrieve()
-                     .bodyToMono(RateAPIResponse.class)
+                     .bodyToMono(FrankfurterResponse.class)
                      .map(response -> {
                        // Prepare to return the exchange rate.
                        final CurrencyExchangeRate exchangeRate = new CurrencyExchangeRate();
@@ -82,10 +82,10 @@ public class RatesAPIExchangeRateProvider implements ExchangeRateProvider
   }
 
   /**
-   * The response from Rates API, containing the exchange rates for a given
+   * The response from Frankfurter, containing the exchange rates for a given
    * currency.
    */
-  private static class RateAPIResponse
+  private static class FrankfurterResponse
   {
     private Currency                  base;
     private Map<Currency, BigDecimal> rates;
