@@ -1,0 +1,75 @@
+<div class="jumbotron">
+  <h1>Currency Conversion</h1>
+  <p>
+    Choose source and target currencies to find the current exchanges rates
+    between them. The selected currency-pair is submitted to the server-side,
+    which returns exchange rates for that pair from multiple sources. The
+    server-side is implemented as a reactive REST API using Spring WebFlux.
+  </p>
+</div>
+<div class="card">
+  <div class="card-body">
+    <form [formGroup]="exchangeRateForm">
+      <div class="row">
+        <div class="col-md">
+          <div class="form-group">
+            <select class="form-control" required="required" formControlName="source"
+              [class.is-invalid]="source.invalid && source.touched" [class.is-valid]="source.valid && source.touched">
+              <option value="">From</option>
+              <option value="GBP">British Pound</option>
+              <option value="CAD">Canadian Dollar</option>
+              <option value="EUR">Euro</option>
+              <option value="INR">Indian Rupee</option>
+              <option value="JPY">Japanese Yen</option>
+              <option value="USD">US Dollar</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-md">
+          <div class="form-group">
+            <select class="form-control" required="required" formControlName="target"
+              [class.is-invalid]="target.invalid && target.touched" [class.is-valid]="target.valid && target.touched">
+              <option value="">To</option>
+              <option value="GBP">British Pound</option>
+              <option value="CAD">Canadian Dollar</option>
+              <option value="EUR">Euro</option>
+              <option value="INR">Indian Rupee</option>
+              <option value="JPY">Japanese Yen</option>
+              <option value="USD">US Dollar</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md">
+          <button class="btn btn-primary" type="reset">Reset</button>
+        </div>
+        <div class="col-md">
+          <button class="btn btn-success float-right" [disabled]="exchangeRateForm.invalid" (click)="getExchangeRates()">Get
+            Rates</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<table mat-table class="mat-elevation-z8" [dataSource]="rates" *ngIf="rates && rates.length">
+  <ng-container matColumnDef="source">
+    <th mat-header-cell *matHeaderCellDef>From</th>
+    <td mat-cell *matCellDef="let rate">{{rate.source}}</td>
+  </ng-container>
+  <ng-container matColumnDef="target">
+    <th mat-header-cell *matHeaderCellDef>To</th>
+    <td mat-cell *matCellDef="let rate">{{rate.target}}</td>
+  </ng-container>
+  <ng-container matColumnDef="value">
+    <th mat-header-cell *matHeaderCellDef>Rate</th>
+    <td mat-cell *matCellDef="let rate">{{rate.value}}</td>
+  </ng-container>
+  <ng-container matColumnDef="provider">
+    <th mat-header-cell *matHeaderCellDef>Source</th>
+    <td mat-cell *matCellDef="let rate">{{rate.provider}}</td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="columns"></tr>
+  <tr mat-row *matRowDef="let row; columns: columns;"></tr>
+</table>
