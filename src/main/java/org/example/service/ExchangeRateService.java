@@ -20,7 +20,6 @@ import org.example.domain.CurrencyExchangeRate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 import java.util.Collection;
 import java.util.Currency;
@@ -35,8 +34,8 @@ public class ExchangeRateService
   private Collection<ExchangeRateProvider> providers;
 
   /**
-   * Gets current exchange rates for a currency-pair from various sources on
-   * the internet.
+   * Gets current exchange rates for a currency-pair from various internet
+   * sources.
    *
    * @param source The source currency for the conversion.
    * @param target The target currency for the conversion.
@@ -44,9 +43,7 @@ public class ExchangeRateService
    */
   public Flux<CurrencyExchangeRate> getExchangeRates(final Currency source, final Currency target)
   {
-    return providers.parallelStream()
-                    .map(provider -> provider.getExchangeRate(source, target))
-                    .map(Mono::flux)
-                    .reduce(Flux.empty(), Flux::concat);
+    return Flux.fromIterable(providers)
+               .flatMap(provider -> provider.getExchangeRate(source, target));
   }
 }

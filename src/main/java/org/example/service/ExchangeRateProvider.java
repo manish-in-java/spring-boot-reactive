@@ -22,17 +22,17 @@ import reactor.core.publisher.Mono;
 import java.util.Currency;
 
 /**
- * Fetches currency exchange rates from an external source.
+ * Contract for fetching currency exchange rates from an internet source.
  */
 public interface ExchangeRateProvider
 {
   /**
-   * Gets current exchange rate for a currency-pair from a source on the
-   * internet.
+   * Gets current exchange rate for converting one currency (the source) to
+   * another (the target), from an internet source.
    *
    * @param source The source currency for the conversion.
    * @param target The target currency for the conversion.
-   * @return Exchange rate from the source.
+   * @return Exchange rate from the source to the target.
    */
   Mono<CurrencyExchangeRate> getExchangeRate(Currency source, Currency target);
 }

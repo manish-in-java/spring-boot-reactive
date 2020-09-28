@@ -16,10 +16,9 @@
 
 import { Component } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 
 import { environment } from "../../environments/environment";
-
-import { ServerSentEventService } from "./service";
 
 /*
  * Application home page.
@@ -36,9 +35,9 @@ export class HomeComponent {
     source: new FormControl(""),
     target: new FormControl("")
   });
-  rates = [];
+  rates;
 
-  constructor(private service: ServerSentEventService) { }
+  constructor(private http: HttpClient) { }
 
   /**
    * Gets exchange rates for a selected currency pair.
@@ -47,9 +46,10 @@ export class HomeComponent {
     if (this.exchangeRateForm.valid) {
       const url = HomeComponent.BASE_URL + this.source.value + "/" + this.target.value;
 
-      this.service
-        .getServerSentEvent(url)
-        .subscribe(event => this.rates = [JSON.parse(event.data)]);
+      this.http
+          .get(url)
+          .toPromise()
+          .then(data => this.rates = data); 
 
       this.exchangeRateForm.reset();
     }
